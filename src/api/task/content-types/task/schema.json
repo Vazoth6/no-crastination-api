@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tasks",
+  "info": {
+    "singularName": "task",
+    "pluralName": "tasks",
+    "displayName": "Task",
+    "description": "User tasks for productivity tracking"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "content-type-builder": {
+      "visible": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "minLength": 3,
+      "maxLength": 255
+    },
+    "description": {
+      "type": "text"
+    },
+    "dueDate": {
+      "type": "datetime"
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ],
+      "default": "MEDIUM"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "TODO",
+        "IN_PROGRESS",
+        "COMPLETED",
+        "CANCELLED"
+      ],
+      "default": "TODO"
+    },
+    "category": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "estimatedMinutes": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "actualMinutes": {
+      "type": "integer",
+      "min": 0,
+      "default": 0
+    },
+    "completedAt": {
+      "type": "datetime"
+    }
+  }
+}

@@ -1,4 +1,26 @@
-const path = require('path');
+export default ({ env }) => ({
+  connection: {
+    client: 'postgres',
+    connection: {
+      host: env('DATABASE_HOST', 'localhost'),
+      port: env.int('DATABASE_PORT', 5432),
+      database: env('DATABASE_NAME', 'no_crastination'),
+      user: env('DATABASE_USERNAME', 'postgres'),
+      password: env('DATABASE_PASSWORD', '1234!'),
+      schema: env('DATABASE_SCHEMA', 'public'),
+      ssl: env.bool('DATABASE_SSL', false) ? {
+        rejectUnauthorized: env.bool('DATABASE_SSL_SELF', false),
+      } : false,
+    },
+    debug: env('DATABASE_DEBUG', false),
+    pool: {
+      min: env.int('DATABASE_POOL_MIN', 2),
+      max: env.int('DATABASE_POOL_MAX', 10),
+    },
+  },
+});
+
+/*const path = require('path');
 
 module.exports = ({ env }) => {
   const client = env('DATABASE_CLIENT', 'sqlite');
@@ -57,4 +79,4 @@ module.exports = ({ env }) => {
       acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
     },
   };
-};
+};*/
