@@ -34,17 +34,18 @@
     "priority": {
       "type": "enumeration",
       "default": "MEDIUM",
-      "enum": [
-        "HIGH",
-        "MEDIUM",
-        "LOW"
-      ]
+      "enum": ["HIGH", "MEDIUM", "LOW"]
     },
     "completed": {
       "type": "boolean"
     },
     "completedAt": {
       "type": "datetime"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

@@ -5,12 +5,26 @@ module.exports = {
     try {
       console.log('📡 GET /api/task chamado');
       
-      // Para teste, ignore a autenticação temporariamente
+      // Obter o usuário autenticado do token JWT
+      const user = ctx.state.user;
+      
+      if (!user) {
+        console.log('❌ Usuário não autenticado');
+        return ctx.unauthorized('You must be logged in to view tasks.');
+      }
+      
+      console.log(`✅ Usuário autenticado: ${user.id} (${user.email})`);
+      
+      // Filtrar tarefas apenas do usuário atual
       const tasks = await strapi.entityService.findMany('api::task.task', {
-        sort: { createdAt: 'desc' }
+        filters: {
+          user: user.id  // FILTRO POR USUÁRIO
+        },
+        sort: { createdAt: 'desc' },
+        populate: ['user']
       });
       
-      console.log(`✅ ${tasks.length} tarefas encontradas`);
+      console.log(`✅ ${tasks.length} tarefas encontradas para o usuário ${user.id}`);
       
       const data = tasks.map(task => ({
         id: task.id,
@@ -22,7 +36,9 @@ module.exports = {
           completed: task.completed || false,
           completedAt: task.completedAt,
           createdAt: task.createdAt,
-          updatedAt: task.updatedAt
+          updatedAt: task.updatedAt,
+          // Incluir userId se quiser no frontend
+          userId: task.user ? task.user.id : null
         }
       }));
       
@@ -38,10 +54,24 @@ module.exports = {
       const { id } = ctx.params;
       console.log(`📡 GET /api/task/${id} chamado`);
       
-      const task = await strapi.entityService.findOne('api::task.task', id);
+      const user = ctx.state.user;
+      
+      if (!user) {
+        return ctx.unauthorized('You must be logged in to view tasks.');
+      }
+      
+      const task = await strapi.entityService.findOne('api::task.task', id, {
+        populate: ['user']
+      });
       
       if (!task) {
         return ctx.notFound('Task not found');
+      }
+      
+      // Verificar se a tarefa pertence ao usuário
+      if (!task.user || task.user.id !== user.id) {
+        console.log(`❌ Tentativa de acesso não autorizado: Usuário ${user.id} tentou acessar tarefa ${id} do usuário ${task.user?.id}`);
+        return ctx.forbidden('You do not have permission to view this task.');
       }
       
       return {
@@ -68,17 +98,32 @@ module.exports = {
   async create(ctx) {
     try {
       console.log('📡 POST /api/task chamado');
+      
+      const user = ctx.state.user;
+      
+      if (!user) {
+        return ctx.unauthorized('You must be logged in to create tasks.');
+      }
+      
       const { data } = ctx.request.body;
       
       if (!data || !data.attributes) {
         return ctx.badRequest('Missing data.attributes');
       }
       
+      // Associar a tarefa ao usuário atual
+      const taskData = {
+        ...data.attributes,
+        user: user.id  // ASSOCIA AO USUÁRIO LOGADO
+      };
+      
+      console.log(`✅ Criando tarefa para o usuário ${user.id}`);
+      
       const task = await strapi.entityService.create('api::task.task', {
-        data: data.attributes
+        data: taskData
       });
       
-      console.log(`✅ Tarefa criada: ${task.id} - ${task.title}`);
+      console.log(`✅ Tarefa criada: ${task.id} - ${task.title} para o usuário ${user.id}`);
       
       return {
         data: {
@@ -105,6 +150,26 @@ module.exports = {
     try {
       const { id } = ctx.params;
       console.log(`📡 PUT /api/task/${id} chamado`);
+      
+      const user = ctx.state.user;
+      
+      if (!user) {
+        return ctx.unauthorized('You must be logged in to update tasks.');
+      }
+      
+      // Primeiro verificar se a tarefa existe e pertence ao usuário
+      const existingTask = await strapi.entityService.findOne('api::task.task', id, {
+        populate: ['user']
+      });
+      
+      if (!existingTask) {
+        return ctx.notFound('Task not found');
+      }
+      
+      if (!existingTask.user || existingTask.user.id !== user.id) {
+        console.log(`❌ Tentativa de atualização não autorizada: Usuário ${user.id} tentou atualizar tarefa ${id} do usuário ${existingTask.user?.id}`);
+        return ctx.forbidden('You do not have permission to update this task.');
+      }
       
       const { data } = ctx.request.body;
       
@@ -142,9 +207,29 @@ module.exports = {
       const { id } = ctx.params;
       console.log(`📡 DELETE /api/task/${id} chamado`);
       
+      const user = ctx.state.user;
+      
+      if (!user) {
+        return ctx.unauthorized('You must be logged in to delete tasks.');
+      }
+      
+      // Primeiro verificar se a tarefa existe e pertence ao usuário
+      const existingTask = await strapi.entityService.findOne('api::task.task', id, {
+        populate: ['user']
+      });
+      
+      if (!existingTask) {
+        return ctx.notFound('Task not found');
+      }
+      
+      if (!existingTask.user || existingTask.user.id !== user.id) {
+        console.log(`❌ Tentativa de exclusão não autorizada: Usuário ${user.id} tentou excluir tarefa ${id} do usuário ${existingTask.user?.id}`);
+        return ctx.forbidden('You do not have permission to delete this task.');
+      }
+      
       await strapi.entityService.delete('api::task.task', id);
       
-      console.log(`✅ Tarefa ${id} deletada`);
+      console.log(`✅ Tarefa ${id} deletada pelo usuário ${user.id}`);
       
       return { data: null };
     } catch (error) {
