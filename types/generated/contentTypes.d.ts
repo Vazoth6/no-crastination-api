@@ -489,15 +489,6 @@ export interface ApiDailyStatDailyStat extends Struct.CollectionTypeSchema {
       'api::daily-stat.daily-stat'
     > &
       Schema.Attribute.Private;
-    productivityScore: Schema.Attribute.Decimal &
-      Schema.Attribute.SetMinMax<
-        {
-          max: 100;
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     tasksCompleted: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
@@ -572,21 +563,12 @@ export interface ApiPomodoroSessionPomodoroSession
       > &
       Schema.Attribute.DefaultTo<25>;
     endTime: Schema.Attribute.DateTime;
-    interruptions: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::pomodoro-session.pomodoro-session'
     > &
       Schema.Attribute.Private;
-    notes: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
     sessionType: Schema.Attribute.Enumeration<
       ['WORK', 'SHORT_BREAK', 'LONG_BREAK']
@@ -619,42 +601,19 @@ export interface ApiTaskTask extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    actualMinutes: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
-    category: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 50;
-      }>;
+    completed: Schema.Attribute.Boolean;
     completedAt: Schema.Attribute.DateTime;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
     dueDate: Schema.Attribute.DateTime;
-    estimatedMinutes: Schema.Attribute.Integer &
-      Schema.Attribute.SetMinMax<
-        {
-          min: 0;
-        },
-        number
-      > &
-      Schema.Attribute.DefaultTo<0>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::task.task'> &
       Schema.Attribute.Private;
     priority: Schema.Attribute.Enumeration<['HIGH', 'MEDIUM', 'LOW']> &
       Schema.Attribute.DefaultTo<'MEDIUM'>;
     publishedAt: Schema.Attribute.DateTime;
-    status: Schema.Attribute.Enumeration<
-      ['TODO', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']
-    > &
-      Schema.Attribute.DefaultTo<'TODO'>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{

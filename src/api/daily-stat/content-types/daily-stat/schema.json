@@ -7,6 +7,10 @@
     "displayName": "Daily Stat",
     "description": "Daily productivity statistics"
   },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
   "attributes": {
     "date": {
       "type": "date",
@@ -36,12 +40,6 @@
       "type": "integer",
       "default": 0,
       "min": 0
-    },
-    "productivityScore": {
-      "type": "decimal",
-      "default": 0,
-      "min": 0,
-      "max": 100
     }
   }
 }

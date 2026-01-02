@@ -1,20 +1,28 @@
+// config/plugins.js
 module.exports = ({ env }) => ({
+  // ... other plugins
   'users-permissions': {
     config: {
+      jwtSecret: env('JWT_SECRET'),
       jwt: {
         expiresIn: '7d',
-        jwtSecret: env('JWT_SECRET'),
-      },
-      jwtRefreshToken: {
-        expiresIn: '30d',
-        refreshTokenSecret: env('JWT_REFRESH_SECRET'),
       },
       register: {
         allowedFields: ['username', 'email'],
       },
-      ratelimit: {
-        interval: 60000,
-        max: 10,
+      // Disable email for now to test
+      email: {
+        config: {
+          provider: 'sendmail', // or 'nodemailer'
+          providerOptions: {},
+          settings: {
+            defaultFrom: 'no-reply@localhost',
+            defaultReplyTo: 'no-reply@localhost',
+          },
+        },
+      },
+      emailConfirmation: {
+        enabled: false,
       },
     },
   },

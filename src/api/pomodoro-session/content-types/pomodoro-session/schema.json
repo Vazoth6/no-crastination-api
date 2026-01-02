@@ -7,15 +7,19 @@
     "displayName": "Pomodoro Session",
     "description": "Pomodoro timer sessions"
   },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
   "attributes": {
     "sessionType": {
       "type": "enumeration",
+      "default": "WORK",
       "enum": [
         "WORK",
         "SHORT_BREAK",
         "LONG_BREAK"
-      ],
-      "default": "WORK"
+      ]
     },
     "startTime": {
       "type": "datetime",
@@ -30,17 +34,9 @@
       "min": 1,
       "max": 60
     },
-    "interruptions": {
-      "type": "integer",
-      "default": 0,
-      "min": 0
-    },
     "completed": {
       "type": "boolean",
       "default": true
-    },
-    "notes": {
-      "type": "text"
     }
   }
 }

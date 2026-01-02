@@ -21,9 +21,9 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
       "minLength": 3,
-      "maxLength": 255
+      "maxLength": 255,
+      "required": true
     },
     "description": {
       "type": "text"
@@ -33,36 +33,15 @@
     },
     "priority": {
       "type": "enumeration",
+      "default": "MEDIUM",
       "enum": [
         "HIGH",
         "MEDIUM",
         "LOW"
-      ],
-      "default": "MEDIUM"
+      ]
     },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "TODO",
-        "IN_PROGRESS",
-        "COMPLETED",
-        "CANCELLED"
-      ],
-      "default": "TODO"
-    },
-    "category": {
-      "type": "string",
-      "maxLength": 50
-    },
-    "estimatedMinutes": {
-      "type": "integer",
-      "min": 0,
-      "default": 0
-    },
-    "actualMinutes": {
-      "type": "integer",
-      "min": 0,
-      "default": 0
+    "completed": {
+      "type": "boolean"
     },
     "completedAt": {
       "type": "datetime"
