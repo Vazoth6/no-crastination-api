@@ -540,7 +540,7 @@ export interface ApiPomodoroSessionPomodoroSession
   extends Struct.CollectionTypeSchema {
   collectionName: 'pomodoro_sessions';
   info: {
-    description: 'Pomodoro timer sessions';
+    description: 'Pomodoro timer sessions with user association';
     displayName: 'Pomodoro Session';
     pluralName: 'pomodoro-sessions';
     singularName: 'pomodoro-session';
@@ -549,7 +549,7 @@ export interface ApiPomodoroSessionPomodoroSession
     draftAndPublish: false;
   };
   attributes: {
-    completed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    completed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -575,9 +575,14 @@ export interface ApiPomodoroSessionPomodoroSession
     > &
       Schema.Attribute.DefaultTo<'WORK'>;
     startTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    task: Schema.Attribute.Relation<'manyToOne', 'api::task.task'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 

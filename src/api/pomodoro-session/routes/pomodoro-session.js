@@ -4,7 +4,7 @@ module.exports = {
   routes: [
     {
       method: 'GET',
-      path: '/pomodoro-session',
+      path: '/pomodoro-sessions',
       handler: 'pomodoro-session.find',
       config: {
         policies: [],
@@ -13,7 +13,7 @@ module.exports = {
     },
     {
       method: 'GET',
-      path: '/pomodoro-session/:id',
+      path: '/pomodoro-sessions/:id',
       handler: 'pomodoro-session.findOne',
       config: {
         policies: [],
@@ -22,7 +22,7 @@ module.exports = {
     },
     {
       method: 'POST',
-      path: '/pomodoro-session',
+      path: '/pomodoro-sessions',
       handler: 'pomodoro-session.create',
       config: {
         policies: [],
@@ -31,7 +31,7 @@ module.exports = {
     },
     {
       method: 'PUT',
-      path: '/pomodoro-session/:id',
+      path: '/pomodoro-sessions/:id',
       handler: 'pomodoro-session.update',
       config: {
         policies: [],
@@ -40,7 +40,7 @@ module.exports = {
     },
     {
       method: 'DELETE',
-      path: '/pomodoro-session/:id',
+      path: '/pomodoro-sessions/:id',
       handler: 'pomodoro-session.delete',
       config: {
         policies: [],
